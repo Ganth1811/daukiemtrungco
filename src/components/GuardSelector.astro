@@ -1,0 +1,145 @@
+---
+// Widget tương tác: bấm chọn 1 thế thủ, sơ đồ 4 ô mục tiêu (Vier Blössen)
+// tự cập nhật ô nào đang "mở" (dễ bị đánh trúng). Không cần framework —
+// chỉ vanilla JS trong <script>, xem cách hoạt động ở cuối file.
+interface Guard {
+  id: string;
+  label: string;
+  open: string[]; // các ô đang mở: 'tl' | 'tr' | 'bl' | 'br'
+  note: string;
+}
+
+const guards: Guard[] = [
+  {
+    id: 'vom-tag',
+    label: 'Vom Tag',
+    open: ['bl', 'br'],
+    note: 'Che tốt phần trên, đổi lại phần dưới mở trong khoảnh khắc ra đòn.',
+  },
+  {
+    id: 'ochs',
+    label: 'Ochs',
+    open: ['bl', 'br'],
+    note: 'Che tốt cả hai ô trên, mũi kiếm đã sẵn sàng đâm — không cần vung xa.',
+  },
+  {
+    id: 'pflug',
+    label: 'Pflug',
+    open: ['tl', 'tr'],
+    note: 'Che tốt phần dưới, và có thể đâm thẳng lên gần như ngay lập tức.',
+  },
+  {
+    id: 'alber',
+    label: 'Alber',
+    open: ['tl', 'tr', 'bl', 'br'],
+    note: 'Để hở gần như toàn bộ — đổi lại là một đòn phản cực nhanh nếu bị tấn công.',
+  },
+];
+---
+
+<div class="guard-selector">
+  <svg viewBox="0 0 200 260" class="guard-figure" aria-hidden="true">
+    <circle cx="100" cy="34" r="22" class="zone-outline" />
+    <rect data-zone="tl" x="20" y="66" width="80" height="90" class="zone" />
+    <rect data-zone="tr" x="100" y="66" width="80" height="90" class="zone" />
+    <rect data-zone="bl" x="20" y="156" width="80" height="90" class="zone" />
+    <rect data-zone="br" x="100" y="156" width="80" height="90" class="zone" />
+  </svg>
+
+  <div class="guard-controls">
+    <div class="guard-buttons" role="group" aria-label="Chọn thế thủ">
+      {guards.map((g, i) => (
+        <button
+          type="button"
+          class="guard-btn"
+          data-open={g.open.join(',')}
+          data-note={g.note}
+          aria-pressed={i === 0 ? 'true' : 'false'}
+        >
+          {g.label}
+        </button>
+      ))}
+    </div>
+    <p class="guard-note">{guards[0].note}</p>
+  </div>
+</div>
+
+<style>
+  .guard-selector {
+    display: grid;
+    grid-template-columns: minmax(150px, 200px) 1fr;
+    gap: 1.5rem;
+    align-items: center;
+    margin: 2rem 0;
+    padding: 1.25rem;
+    border: 1px solid var(--color-steel-light);
+    border-radius: var(--radius);
+    background: color-mix(in srgb, var(--color-paper) 92%, white);
+  }
+  .guard-figure { width: 100%; height: auto; }
+  .zone-outline { fill: none; stroke: var(--color-ink-soft); stroke-width: 3; }
+  .zone {
+    fill: var(--color-steel-light);
+    stroke: var(--color-paper);
+    stroke-width: 3;
+    transition: fill 0.35s ease;
+  }
+  /* "open" = ô đang hở, tô màu oxblood để báo hiệu vùng dễ bị đánh trúng */
+  .zone.open {
+    fill: color-mix(in srgb, var(--color-oxblood) 55%, var(--color-paper));
+  }
+  .guard-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0 0 0.8rem;
+  }
+  .guard-btn {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 0.4em 0.9em;
+    border: 1px solid var(--color-steel-light);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--color-ink-soft);
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+  }
+  .guard-btn[aria-pressed='true'] {
+    border-color: var(--color-oxblood);
+    color: var(--color-oxblood);
+    background: color-mix(in srgb, var(--color-oxblood) 8%, transparent);
+  }
+  .guard-note { margin: 0; color: var(--color-ink-soft); }
+
+  @media (max-width: 560px) {
+    .guard-selector { grid-template-columns: 1fr; }
+    .guard-figure { max-width: 180px; margin: 0 auto; }
+  }
+</style>
+
+<script>
+  // Chạy cho MỌI instance của widget trên trang (phòng khi có nhiều bài
+  // viết dùng cùng lúc component này) — không hard-code chỉ 1 cái.
+  document.querySelectorAll<HTMLElement>('.guard-selector').forEach((root) => {
+    const zones = root.querySelectorAll<SVGRectElement>('.zone');
+    const note = root.querySelector('.guard-note');
+    const buttons = root.querySelectorAll<HTMLButtonElement>('.guard-btn');
+
+    function activate(btn: HTMLButtonElement) {
+      buttons.forEach((b) => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+      const openIds = (btn.dataset.open ?? '').split(',').filter(Boolean);
+      zones.forEach((zone) => {
+        zone.classList.toggle('open', openIds.includes(zone.dataset.zone ?? ''));
+      });
+      if (note) note.textContent = btn.dataset.note ?? '';
+    }
+
+    buttons.forEach((btn) => btn.addEventListener('click', () => activate(btn)));
+
+    const initial = root.querySelector<HTMLButtonElement>('.guard-btn[aria-pressed="true"]') ?? buttons[0];
+    if (initial) activate(initial);
+  });
+</script>

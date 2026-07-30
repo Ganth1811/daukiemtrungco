@@ -1,0 +1,39 @@
+<svg viewBox="0 0 1600 640" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ddd8c8" />
+      <stop offset="100%" stop-color="#e9e5d8" />
+    </linearGradient>
+
+    <pattern id="hatch" width="44" height="44" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="44" stroke="#46586b" stroke-width="1" stroke-opacity="0.12" />
+    </pattern>
+
+    <linearGradient id="fade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-opacity="0" stop-color="#000000" />
+      <stop offset="42%" stop-opacity="0" stop-color="#000000" />
+      <stop offset="100%" stop-opacity="1" stop-color="#ffffff" />
+    </linearGradient>
+    <mask id="fadeMask">
+      <rect x="0" y="0" width="1600" height="640" fill="url(#fade)" />
+    </mask>
+
+    <!-- 1 thanh trường kiếm: gốc toạ độ tại chuôi (pommel), lưỡi hướng lên -y -->
+    <g id="sword">
+      <polygon points="-9,-96 9,-96 4,-350 0,-366 -4,-350" fill="#211d18" />
+      <rect x="-45" y="-96" width="90" height="13" rx="2" fill="#211d18" />
+      <rect x="-7" y="-84" width="14" height="70" rx="2" fill="#211d18" />
+      <circle cx="0" cy="0" r="14" fill="#211d18" />
+    </g>
+  </defs>
+
+  <rect width="1600" height="640" fill="url(#bg)" />
+  <rect width="1600" height="640" fill="url(#hatch)" />
+
+  <g mask="url(#fadeMask)" opacity="0.42">
+    <use href="#sword" transform="translate(1150,500) rotate(-35)" />
+    <use href="#sword" transform="translate(1360,500) rotate(35)" />
+  </g>
+
+  <circle cx="1255" cy="255" r="5" fill="#9c7a3c" opacity="0.55" mask="url(#fadeMask)" />
+</svg>

@@ -1,0 +1,26 @@
+{/*
+  Không render UI gì cả — chỉ chứa 1 script chạy 1 lần cho toàn trang.
+  Bất kỳ element nào có class="reveal" sẽ tự fade+trượt lên khi cuộn tới.
+  Cách dùng: <div class="reveal">...</div>
+*/}
+<script>
+  const els = document.querySelectorAll('.reveal');
+
+  if ('IntersectionObserver' in window && els.length) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    els.forEach((el) => io.observe(el));
+  } else {
+    // Trình duyệt không hỗ trợ IntersectionObserver: hiện luôn, không animate
+    els.forEach((el) => el.classList.add('is-visible'));
+  }
+</script>

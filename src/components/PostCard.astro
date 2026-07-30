@@ -1,0 +1,49 @@
+---
+interface Props {
+  slug: string;
+  title: string;
+  description: string;
+  pubDate: Date;
+  weapon?: string;
+  level?: string;
+}
+const { slug, title, description, pubDate, weapon, level } = Astro.props;
+
+const formatted = pubDate.toLocaleDateString('vi-VN', {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+});
+
+const weaponLabel: Record<string, string> = {
+  'truong-kiem': 'Trường kiếm',
+  'kiem-mot-tay': 'Kiếm một tay',
+  'dao-gam': 'Dao găm',
+  'vat': 'Vật',
+  'khac': 'Khác',
+};
+const levelLabel: Record<string, string> = {
+  'co-ban': 'Cơ bản',
+  'trung-cap': 'Trung cấp',
+  'nang-cao': 'Nâng cao',
+};
+---
+
+<a href={`/blog/${slug}`} class="card-link reveal">
+  <article class="card">
+    <p class="eyebrow meta">
+      {formatted}
+      {weapon && <span> · {weaponLabel[weapon] ?? weapon}</span>}
+      {level && <span> · {levelLabel[level] ?? level}</span>}
+    </p>
+    <h3>{title}</h3>
+    <p class="desc">{description}</p>
+  </article>
+</a>
+
+<style>
+  .card-link { text-decoration: none; color: inherit; display: block; }
+  .meta { margin-bottom: 0.6rem; }
+  h3 { margin-bottom: 0.4rem; }
+  .desc { color: var(--color-ink-soft); margin-bottom: 0; }
+</style>
