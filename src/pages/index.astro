@@ -10,17 +10,17 @@ const latest = posts.slice(0, 6);
 ---
 
 <BaseLayout title="Trang chủ">
-  <section class="hero">
+  <Fragment slot="hero">
     <p class="eyebrow">HEMAVN</p>
     <h1>Võ thuật vũ trang lịch sử <em>được chắp bút</em> bằng tiếng Việt.</h1>
     <p class="lede">
       Một trang tổng hợp các bài viết và tài liệu về Historical Fencing/HEMA,
       được đúc kết lại qua nhiều kiến thức, kinh nghiệm tập luyện của các kiếm
-      thủ Việt nhằm lưu giữ, chia sẻ và lan tỏa đến mọi người tập.
+      thủ Việt nhằm lưu giữ, chia sẻ và lan tỏa đến mọi huynh hữu tập luyện.
     </p>
-  </section>
+  </Fragment>
 
-  <section>
+  <section class="latest-posts">
     <h2>Bài viết mới nhất</h2>
     <div class="grid">
       {
@@ -38,41 +38,12 @@ const latest = posts.slice(0, 6);
     </div>
   </section>
 </BaseLayout>
-
 <style>
-  .hero {
-    position: relative;
-    padding: 4.5rem 0 3.5rem;
-    overflow: hidden;
-    isolation: isolate;
-    min-height: clamp(320px, 42vw, 460px);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  /* Banner nền: ảnh SVG 2 thanh trường kiếm bắt chéo (public/images/hero-banner.svg),
-     đặt lệch phải + 1 lớp "scrim" phủ từ trái sang để chữ luôn dễ đọc dù ảnh nền
-     có thay đổi (kể cả khi sau này bạn thay bằng ảnh chụp thật). */
-  .hero::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(
-        to right,
-        var(--color-paper) 0%,
-        color-mix(in srgb, var(--color-paper) 65%, transparent) 42%,
-        transparent 68%
-      ),
-      url("/images/hero-banner.svg");
-    background-size: cover, cover;
-    background-position:
-      center,
-      right center;
-    background-repeat: no-repeat, no-repeat;
-    z-index: -1;
-  }
-  .hero h1 {
+  /* Nội dung hero trang chủ được author Ở ĐÂY (truyền qua slot "hero" vào
+     BaseLayout), nên style/animation riêng của nó cũng phải nằm ở đây —
+     không phải trong HeroBanner.astro. Astro scope CSS theo nơi phần tử
+     được VIẾT ra, không phải nơi nó được RENDER ra. */
+  :global(.hero) h1 {
     max-width: 30ch;
     text-wrap: balance;
     position: relative;
@@ -84,17 +55,15 @@ const latest = posts.slice(0, 6);
     position: relative;
   }
 
-  /* Animation load-in: xuất hiện ngay khi trang tải, không cần JS vì nằm
-     ngay đầu trang (above the fold) — set độ trễ so le cho 3 dòng. */
-  .hero .eyebrow,
-  .hero h1,
-  .hero .lede {
+  .eyebrow,
+  h1,
+  .lede {
     animation: fade-up 0.7s ease both;
   }
-  .hero h1 {
+  h1 {
     animation-delay: 0.08s;
   }
-  .hero .lede {
+  .lede {
     animation-delay: 0.16s;
   }
 
@@ -114,5 +83,9 @@ const latest = posts.slice(0, 6);
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 1.2rem;
     margin-top: 1.5rem;
+  }
+
+  .latest-posts {
+    margin-top: 4.5rem;
   }
 </style>

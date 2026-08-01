@@ -1,20 +1,26 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
-<BaseLayout title="Giới thiệu" description="Giới thiệu về Kiếm & Luận và người viết.">
+<BaseLayout
+  title="Giới thiệu"
+  description="Giới thiệu về Kiếm & Luận và người viết."
+>
   <article class="prose">
-    <h1>Giới thiệu</h1>
     <p>
-      <em>(Thay nội dung này bằng giới thiệu thật của bạn.)</em> Ví dụ: bạn là
-      instructor tại một lò HEMA, đã tập luyện và giảng dạy trường kiếm Đức
-      (German longsword) theo truyền thống Liechtenauer trong X năm. Trang
-      này nên nói rõ: bạn dạy ở đâu, trường phái nào, và vì sao bạn viết blog
-      này bằng tiếng Việt.
+      <em>(Thay nội dung này bằng giới thiệu thật của bạn.)</em> Ví dụ: bạn là instructor
+      tại một lò HEMA, đã tập luyện và giảng dạy trường kiếm Đức (German longsword)
+      theo truyền thống Liechtenauer trong X năm. Trang này nên nói rõ: bạn dạy ở
+      đâu, trường phái nào, và vì sao bạn viết blog này bằng tiếng Việt.
     </p>
     <p>
-      Có thể thêm: lịch tập, thông tin liên hệ, hoặc link tới lò HEMA của
-      bạn.
+      Có thể thêm: lịch tập, thông tin liên hệ, hoặc link tới lò HEMA của bạn.
     </p>
   </article>
 </BaseLayout>
+
+<style>
+  .prose {
+    margin-top: 3rem;
+  }
+</style>

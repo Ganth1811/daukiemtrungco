@@ -12,8 +12,6 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
   title="Bài viết"
   description="Toàn bộ bài viết về HEMA trên Kiếm & Luận."
 >
-  <h1>Bài viết</h1>
-  <p class="eyebrow">Tất cả bài viết trên HEMAVN</p>
   <div class="grid">
     {
       posts.map((post) => (
@@ -35,6 +33,6 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 1.2rem;
-    margin-top: 1.5rem;
+    margin-top: 3rem;
   }
 </style>

@@ -1,0 +1,106 @@
+---
+// Banner dùng chung cho MỌI trang — import 1 lần trong BaseLayout.astro.
+// Nội dung bên trong (eyebrow/h1/lede...) do từng trang tự cung cấp qua
+// slot "hero"; nếu trang không cung cấp, BaseLayout sẽ tự fallback về
+// <h1>{title}</h1>.
+interface Props {
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+---
+
+<section class:list={["hero", { "hero--compact": compact }]}>
+  <div class="hero-photo" data-parallax></div>
+  <div class="hero-scrim"></div>
+  <div class="hero-inner wrap">
+    <slot />
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    padding: 4.5rem 0 3.5rem;
+    min-height: clamp(320px, 42vw, 460px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .hero--compact {
+    padding: 2.75rem 0 2.5rem;
+    min-height: clamp(200px, 24vw, 280px);
+  }
+
+  .hero-photo {
+    position: absolute;
+    inset: -12% 0;
+    background-image: url("/images/dermeyer.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.8;
+    z-index: -2;
+    will-change: transform;
+  }
+
+  .hero-scrim {
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(
+      to right,
+      var(--color-paper) 0%,
+      color-mix(in srgb, var(--color-paper) 70%, transparent) 45%,
+      color-mix(in srgb, var(--color-paper) 20%, transparent) 100%
+    );
+    z-index: -1;
+  }
+
+  .hero-inner {
+    position: relative;
+  }
+</style>
+
+<script>
+  // Fix "cuộn nhanh không thấy": bản cũ chỉ update transform trong callback
+  // của 'scroll'. Khi cuộn rất nhanh, trình duyệt có thể gộp/bỏ bớt số lần
+  // bắn sự kiện đó → ảnh nhảy cóc. Giờ dùng vòng lặp requestAnimationFrame
+  // LIÊN TỤC, tự đọc scrollY mới nhất mỗi khung hình — luôn khớp bất kể tốc
+  // độ cuộn.
+  const prefersReduced = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+
+  if (!prefersReduced) {
+    document.querySelectorAll<HTMLElement>(".hero").forEach((hero) => {
+      const photo = hero.querySelector<HTMLElement>(".hero-photo");
+      if (!photo) return;
+
+      let rafId: number | null = null;
+
+      function frame() {
+        const offset = window.scrollY * 0.2;
+        photo!.style.transform = `translateY(${offset}px)`;
+        rafId = requestAnimationFrame(frame);
+      }
+
+      // Chỉ chạy khi hero gần khung nhìn — đỡ tốn CPU/pin trên trang dài.
+      const io = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting && rafId === null) {
+            rafId = requestAnimationFrame(frame);
+          } else if (!entry.isIntersecting && rafId !== null) {
+            cancelAnimationFrame(rafId);
+            rafId = null;
+          }
+        },
+        { rootMargin: "200px 0px" },
+      );
+      io.observe(hero);
+    });
+  }
+</script>

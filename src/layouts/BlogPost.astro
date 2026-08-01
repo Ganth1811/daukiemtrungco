@@ -1,6 +1,6 @@
 ---
-import BaseLayout from './BaseLayout.astro';
-import Divider from '../components/Divider.astro';
+import BaseLayout from "./BaseLayout.astro";
+import Divider from "../components/Divider.astro";
 
 interface Props {
   title: string;
@@ -12,20 +12,31 @@ interface Props {
   level?: string;
   tags?: string[];
 }
-const { title, description, pubDate, updatedDate, weapon, source, level, tags = [] } =
-  Astro.props;
+const {
+  title,
+  description,
+  pubDate,
+  updatedDate,
+  weapon,
+  source,
+  level,
+  tags = [],
+} = Astro.props;
 
-const formatted = pubDate.toLocaleDateString('vi-VN', {
-  day: '2-digit',
-  month: 'long',
-  year: 'numeric',
+const formatted = pubDate.toLocaleDateString("vi-VN", {
+  day: "2-digit",
+  month: "long",
+  year: "numeric",
 });
 ---
 
-<BaseLayout title={title} description={description}>
-  <article class="prose">
-    <p class="eyebrow">{formatted}{updatedDate && ' · đã cập nhật'}</p>
+<BaseLayout title={title} description={description} heroCompact>
+  <Fragment slot="hero">
     <h1>{title}</h1>
+  </Fragment>
+
+  <article class="prose">
+    <p class="eyebrow">{formatted}{updatedDate && " · đã cập nhật"}</p>
 
     <p class="meta-line">
       {weapon && <span class="tag">{weapon}</span>}
@@ -37,20 +48,31 @@ const formatted = pubDate.toLocaleDateString('vi-VN', {
 
     <slot />
 
-    {tags.length > 0 && (
-      <>
-        <Divider />
-        <p class="eyebrow" style="margin-bottom:0.6rem;">Chủ đề liên quan</p>
-        <p>
-          {tags.map((t) => (
-            <a class="tag" href={`/tags/${t}`}>#{t}</a>
-          ))}
-        </p>
-      </>
-    )}
+    {
+      tags.length > 0 && (
+        <>
+          <Divider />
+          <p class="eyebrow" style="margin-bottom:0.6rem;">
+            Chủ đề liên quan
+          </p>
+          <p>
+            {tags.map((t) => (
+              <a class="tag" href={`/tags/${t}`}>
+                #{t}
+              </a>
+            ))}
+          </p>
+        </>
+      )
+    }
   </article>
 </BaseLayout>
 
 <style>
-  .meta-line { margin-top: -0.4rem; }
+  .prose {
+    margin-top: 3rem;
+  }
+  .meta-line {
+    margin-top: -0.4rem;
+  }
 </style>
