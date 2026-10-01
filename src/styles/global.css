@@ -6,12 +6,15 @@
 :root {
   --color-paper: #e9e5d8;
   --color-paper-dim: #ddd8c8;
+  --color-card-bg: color-mix(in srgb, var(--color-paper) 92%, white);
+  --color-card-border: var(--color-steel-light);
   --color-ink: #211d18;
   --color-ink-soft: #4a453d;
   --color-steel: #46586b;
   --color-steel-light: #c7cfd6;
   --color-oxblood: #6e2a34;
   --color-brass: #9c7a3c;
+  --color-border-hover: #9c7a3c;
 
   /* Cormorant Garamond: bản phục dựng kiểu chữ in cổ điển châu Âu (Garamond),
      có bộ dấu tiếng Việt đầy đủ — dùng cho tiêu đề để lấy chất "cổ".
@@ -58,6 +61,7 @@ body {
     radial-gradient(ellipse 900px 620px at 100% 108%, color-mix(in srgb, var(--color-steel) 9%, transparent), transparent 60%),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.13 0 0 0 0 0.11 0 0 0 0 0.09 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-attachment: fixed;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 h1, h2, h3, h4 {
@@ -103,7 +107,7 @@ a:hover { color: var(--color-oxblood); }
 blockquote {
   margin: 1.8em 0;
   padding: 0.3em 0 0.3em 1.3em;
-  border-left: 3px solid var(--color-oxblood);
+  border-left: 3px solid var(--color-border-hover, var(--color-brass));
   font-family: var(--font-display);
   font-style: italic;
   font-size: 1.2rem;
@@ -170,18 +174,19 @@ blockquote {
   margin: 0 0.4em 0.4em 0;
   text-decoration: none;
 }
-.tag:hover { border-color: var(--color-oxblood); color: var(--color-oxblood); }
+.tag:hover { border-color: var(--color-border-hover, var(--color-brass)); color: var(--color-border-hover, var(--color-brass)); }
 
 .card {
-  border: 1px solid var(--color-steel-light);
+  border: 1px solid var(--color-card-border, var(--color-steel-light));
   border-radius: var(--radius);
   padding: 1.4rem;
-  background: color-mix(in srgb, var(--color-paper) 92%, white);
-  transition: border-color 0.15s ease, transform 0.15s ease;
+  background: var(--color-card-bg, color-mix(in srgb, var(--color-paper) 92%, white));
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, background-color 0.25s ease;
 }
 .card:hover {
-  border-color: var(--color-oxblood);
+  border-color: var(--color-border-hover, var(--color-brass));
   transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(33, 29, 24, 0.08);
 }
 
 /* ===== Scroll-reveal: gắn class "reveal" vào bất kỳ element nào để nó
